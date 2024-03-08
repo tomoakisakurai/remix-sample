@@ -18,6 +18,7 @@ import {
 import appStylesHref from './app.css';
 import { createEmptyContact, getContacts } from './data';
 import { useEffect } from 'react';
+import { db } from './infra/db.server';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: appStylesHref },
@@ -26,7 +27,25 @@ export const links: LinksFunction = () => [
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const q = url.searchParams.get('q');
-  const contacts = await getContacts(q);
+  // const contacts = await getContacts(q);
+
+  const contacts = await db.contacts.findMany({
+    where: {
+      OR: [
+        {
+          first: {
+            contains: q ?? '',
+          },
+        },
+        {
+          last: {
+            contains: q ?? '',
+          },
+        },
+      ],
+    },
+  });
+
   return json({ contacts, q });
 };
 

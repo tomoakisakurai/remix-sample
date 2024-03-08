@@ -6,18 +6,34 @@ import { getContact, updateContact } from '../data';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
+import { db } from '~/infra/db.server';
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.contactId, 'Missing contactId param');
   const formData = await request.formData();
-  return updateContact(params.contactId, {
-    favorite: formData.get('favorite') === 'true',
+  // return updateContact(params.contactId, {
+  //   favorite: formData.get('favorite') === 'true',
+  // });
+  const res = await db.contacts.update({
+    where: {
+      id: params.contactId,
+    },
+    data: {
+      favorite: formData.get('favorite') === 'true',
+    },
   });
+  console.log(res);
+  return res;
 };
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.contactId, 'Missing contactId');
-  const contact = await getContact(params.contactId);
+  // const contact = await getContact(params.contactId);
+  const contact = await db.contacts.findUnique({
+    where: {
+      id: params.contactId,
+    },
+  });
   if (!contact) {
     throw new Response('Not found', { status: 404 });
   }
@@ -45,7 +61,6 @@ export default function Contact() {
           src={contact.avatar}
         />
       </div>
-
       <div>
         <h1>
           {contact.first || contact.last ? (
@@ -72,7 +87,6 @@ export default function Contact() {
           <Form action="edit">
             <button type="submit">Edit</button>
           </Form>
-
           <Form
             action="destroy"
             method="post"

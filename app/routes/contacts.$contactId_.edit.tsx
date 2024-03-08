@@ -1,27 +1,37 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, useLoaderData, useNavigate } from "@remix-run/react";
-import invariant from "tiny-invariant";
+import type { LoaderFunctionArgs } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { Form, useLoaderData, useNavigate } from '@remix-run/react';
+import invariant from 'tiny-invariant';
 
-import { getContact, updateContact } from "../data";
+// import { getContact, updateContact } from '../data';
+import { db } from '~/infra/db.server';
 
-export const loader = async ({
-  params,
-}: LoaderFunctionArgs) => {
-  invariant(params.contactId, "Missing contactId param");
-  const contact = await getContact(params.contactId);
+export const loader = async ({ params }: LoaderFunctionArgs) => {
+  invariant(params.contactId, 'Missing contactId param');
+  // const contact = await getContact(params.contactId);
+  const contact = await db.contacts.findUnique({
+    where: {
+      id: params.contactId,
+    },
+  });
   if (!contact) {
-    throw new Response("Not Found", { status: 404 });
+    throw new Response('Not Found', { status: 404 });
   }
   return json({ contact });
 };
 
 export const action = async ({ params, request }: LoaderFunctionArgs) => {
-    invariant(params.contactId, "Missing contactId param");
-    const formData = await request.formData();
-    const updates = Object.fromEntries(formData);
-    await updateContact(params.contactId, updates);
-    return redirect(`/contacts/${params.contactId}`);
+  invariant(params.contactId, 'Missing contactId param');
+  const formData = await request.formData();
+  const updates = Object.fromEntries(formData);
+  // await updateContact(params.contactId, updates);
+  await db.contacts.update({
+    where: {
+      id: params.contactId,
+    },
+    data: updates,
+  });
+  return redirect(`/contacts/${params.contactId}`);
 };
 
 export default function EditContact() {
@@ -68,15 +78,13 @@ export default function EditContact() {
       </label>
       <label>
         <span>Notes</span>
-        <textarea
-          defaultValue={contact.notes}
-          name="notes"
-          rows={6}
-        />
+        <textarea defaultValue={contact.notes} name="notes" rows={6} />
       </label>
       <p>
         <button type="submit">Save</button>
-        <button type="button" onClick={() => navigate(-1)} >Cancel</button>
+        <button type="button" onClick={() => navigate(-1)}>
+          Cancel
+        </button>
       </p>
     </Form>
   );

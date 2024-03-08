@@ -1,0 +1,12 @@
+{
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+      "source.fixAll.stylelint": "explicit"
+    },
+    "editor.formatOnSave": true,
+    "cSpell.words": ["Mogiri", "protobuf"],
+    "editor.fontFamily": "'Intel One Mono'",
+    "editor.stickyScroll.maxLineCount": 10,
+    "workbench.tree.enableStickyScroll": true
+  }
+  
