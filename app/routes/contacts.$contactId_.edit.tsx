@@ -6,6 +6,8 @@ import invariant from 'tiny-invariant';
 // import { getContact, updateContact } from '../data';
 import { db } from '~/infra/db.server';
 
+import * as styles from '../Edit.css';
+
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.contactId, 'Missing contactId param');
   // const contact = await getContact(params.contactId);
@@ -39,7 +41,7 @@ export default function EditContact() {
   const navigate = useNavigate();
 
   return (
-    <Form id="contact-form" method="post">
+    <Form id="contact-form" method="post" className={styles.contactForm}>
       <p>
         <span>Name</span>
         <input

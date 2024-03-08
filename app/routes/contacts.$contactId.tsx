@@ -8,6 +8,8 @@ import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 import { db } from '~/infra/db.server';
 
+import * as styles from '../Contact.css';
+
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.contactId, 'Missing contactId param');
   const formData = await request.formData();
@@ -22,7 +24,6 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       favorite: formData.get('favorite') === 'true',
     },
   });
-  console.log(res);
   return res;
 };
 
@@ -53,16 +54,17 @@ export default function Contact() {
   const { contact } = useLoaderData<typeof loader>();
 
   return (
-    <div id="contact">
+    <div id="contact" className={styles.contact}>
       <div>
         <img
+          className={styles.contactImg}
           alt={`${contact.first} ${contact.last} avatar`}
           key={contact.avatar}
           src={contact.avatar}
         />
       </div>
       <div>
-        <h1>
+        <h1 className={styles.contactH1}>
           {contact.first || contact.last ? (
             <>
               {contact.first} {contact.last}
