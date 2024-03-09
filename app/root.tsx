@@ -25,6 +25,8 @@ import { createEmptyContact, getContacts } from './data';
 
 import './global.css';
 import { root as styles } from './Text.css'; // Note that `.ts` is omitted here
+import * as activityStyles from './Activity.css'; // Note that `.ts` is omitted here
+
 import {
   sidebar,
   sidebarDiv,
@@ -87,7 +89,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     },
   });
 
-  return json({ contacts, q });
+  const activities = await db.activity.findMany({
+    include: {
+      images: true,
+    },
+  });
+
+  return json({ contacts, q, activities });
 };
 
 export const action = async () => {
@@ -97,7 +105,9 @@ export const action = async () => {
 };
 
 export default function App() {
-  const { contacts, q } = useLoaderData<typeof loader>();
+  const { contacts, q, activities } = useLoaderData<typeof loader>();
+  console.log(activities);
+
   const navigation = useNavigation();
   const submit = useSubmit();
   const searching =
@@ -200,8 +210,29 @@ export default function App() {
         >
           <Outlet />
           <div id="universities">
-            <h2>zip code(API fetch)</h2>
-            <ul>
+            {/* <h2>zip code(API fetch)</h2> */}
+            <h2>アクティビティ一覧</h2>
+            <ul className={activityStyles.wrapper}>
+              {activities.map((activity) => (
+                <li key={activity.id} className={activityStyles.item}>
+                  <Link to={`/activities/${activity.id}`}>
+                    <div>
+                      {activity.images.length > 0 && (
+                        <img
+                          className={activityStyles.image}
+                          src={activity.images[0].imageUrl}
+                          alt={activity.name}
+                        />
+                      )}
+                      <div className={activityStyles.content}>
+                        <p>{activity.name}</p>
+                        <p>{activity.description}</p>
+                        <p>￥{activity.minPrice}</p>
+                      </div>
+                    </div>
+                  </Link>
+                </li>
+              ))}
               {/* {res.results.map((zip, index) => (
                 <li key={index} className={styles}>
                   <a href={`https://${zip.zipcode}`}>

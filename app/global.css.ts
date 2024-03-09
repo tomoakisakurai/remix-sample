@@ -49,4 +49,13 @@ globalStyle('button', {
   fontWeight: 500,
 });
 
-// Continue defining global styles as needed following the above patterns
+globalStyle('ul', {
+  listStyle: 'none',
+  padding: 0,
+  margin: 0,
+});
+
+globalStyle('a', {
+  color: 'inherit',
+  textDecoration: 'none',
+});
