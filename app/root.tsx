@@ -106,8 +106,6 @@ export const action = async () => {
 
 export default function App() {
   const { contacts, q, activities } = useLoaderData<typeof loader>();
-  console.log(activities);
-
   const navigation = useNavigation();
   const submit = useSubmit();
   const searching =
