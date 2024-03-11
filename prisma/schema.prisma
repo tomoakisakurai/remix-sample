@@ -26,17 +26,22 @@ model Contacts {
 }
 
 model Activity {
-  id          Int             @id @default(autoincrement())
-  name        String
-  description String?
-  location    String
-  category    String?
-  minPrice    Float? // NULL許容
-  maxPrice    Float? // NULL許容
-  rating      Float?
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @default(now())
-  images      ActivityImage[] // ActivityとActivityImageの関係を示す
+  id             Int             @id @default(autoincrement())
+  name           String
+  description    String?
+  location       String
+  category       String?
+  minPrice       Float? // NULL許容
+  maxPrice       Float? // NULL許容
+  rating         Float?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now())
+  images         ActivityImage[] // ActivityとActivityImageの関係を示す
+  ActivityDetail ActivityDetail?
+  userId         Int?
+  Favorite       Favorite[]
+  User           User?           @relation(fields: [userId], references: [id])
+  favoritedBy    User[]          @relation("UserFavorites")
 }
 
 model ActivityImage {
@@ -45,4 +50,35 @@ model ActivityImage {
   imageUrl   String
   createdAt  DateTime @default(now())
   activity   Activity @relation(fields: [activityId], references: [id])
+}
+
+model ActivityDetail {
+  id               Int       @id @default(autoincrement())
+  activityId       Int // Activityとの関連付け
+  dateTime         DateTime?
+  duration         String?
+  ageLimit         String?
+  servicesIncluded String?
+  itemsRequired    String?
+  notes            String?
+  activity         Activity  @relation(fields: [activityId], references: [id])
+
+  @@unique([activityId]) // activityIdはユニークであることを保証
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  name      String
+  favorites Activity[] @relation("UserFavorites")
+  Activity  Activity[]
+  Favorite  Favorite[]
+}
+
+model Favorite {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int // UserモデルのID
+  activity   Activity @relation(fields: [activityId], references: [id])
+  activityId Int // ActivityモデルのID
+
+  @@id([userId, activityId]) // userIdとactivityIdの組み合わせを一意の識別子とする
 }

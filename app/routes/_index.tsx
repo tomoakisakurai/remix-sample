@@ -1,20 +1,20 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from '@remix-run/node';
+import { Link } from '@remix-run/react';
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: 'New Remix App' },
+    { name: 'description', content: 'Welcome to Remix!' },
   ];
 };
 
 export default function Index() {
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
+    <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.8' }}>
       <p id="index-page">
         This is a demo for Remix.
         <br />
-        Check out{" "}
-        <a href="https://remix.run">the docs at remix.run</a>.
+        Check out <a href="https://remix.run">the docs at remix.run</a>.
       </p>
       <h1>Welcome to Remix</h1>
       <ul>
@@ -41,6 +41,7 @@ export default function Index() {
             Remix Docs
           </a>
         </li>
+        <Link to="/activities">Activities</Link>
       </ul>
     </div>
   );

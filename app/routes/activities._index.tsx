@@ -36,12 +36,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ contacts, q, activities });
 };
 
-export default function App() {
+export default function Activities() {
   const { activities } = useLoaderData<typeof loader>();
 
   return (
     <div id="universities">
-      <h2>アクティビティ一覧</h2>
+      <h2>商品一覧</h2>
       <ul className={activityStyles.wrapper}>
         {activities.map((activity) => (
           <li key={activity.id} className={activityStyles.item}>
