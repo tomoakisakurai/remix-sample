@@ -177,16 +177,16 @@ export default function App() {
                       }
                       to={`contacts/${contact.id}`}
                     >
-                      <Link to={`contacts/${contact.id}`}>
-                        {contact.first || contact.last ? (
-                          <>
-                            {contact.first} {contact.last}
-                          </>
-                        ) : (
-                          <i>No Name</i>
-                        )}{' '}
-                        {contact.favorite ? <span>★</span> : null}
-                      </Link>
+                      {/* <Link to={`contacts/${contact.id}`}> */}
+                      {contact.first || contact.last ? (
+                        <>
+                          {contact.first} {contact.last}
+                        </>
+                      ) : (
+                        <i>No Name</i>
+                      )}
+                      {contact.favorite ? <span>★</span> : null}
+                      {/* </Link> */}
                     </NavLink>
                   </li>
                 ))}
@@ -207,39 +207,6 @@ export default function App() {
           id="detail"
         >
           <Outlet />
-          <div id="universities">
-            {/* <h2>zip code(API fetch)</h2> */}
-            <h2>アクティビティ一覧</h2>
-            <ul className={activityStyles.wrapper}>
-              {activities.map((activity) => (
-                <li key={activity.id} className={activityStyles.item}>
-                  <Link to={`/activities/${activity.id}`}>
-                    <div>
-                      {activity.images.length > 0 && (
-                        <img
-                          className={activityStyles.image}
-                          src={activity.images[0].imageUrl}
-                          alt={activity.name}
-                        />
-                      )}
-                      <div className={activityStyles.content}>
-                        <p>{activity.name}</p>
-                        <p>{activity.description}</p>
-                        <p>￥{activity.minPrice}</p>
-                      </div>
-                    </div>
-                  </Link>
-                </li>
-              ))}
-              {/* {res.results.map((zip, index) => (
-                <li key={index} className={styles}>
-                  <a href={`https://${zip.zipcode}`}>
-                    {zip.zipcode} {zip.address1} {zip.address2} {zip.address3}
-                  </a>
-                </li>
-              ))} */}
-            </ul>
-          </div>
         </div>
         <ScrollRestoration />
         <Scripts />
